@@ -1,0 +1,458 @@
+
+# 所有窗口部件都要pack或别的方法使其安装在窗口上面，这里部分省略
+
+import tkinter as tk
+
+
+# 创建窗口对象
+window = tk.Tk()
+# 定义窗口名
+window.title('我的第一个窗口')
+# 给定窗口长宽，乘号用小写x代替
+window.geometry('200x100')
+
+# 定义一个tk的字符串变量
+var = tk.StringVar()
+
+# 创建window对象的标签,textvariable为标签内容，bg背景，font字体和大小，width为15个字符的宽度，height为2个字符的宽度,
+# wraplength为根据限制长度换行不切割单词, justify为文字显示方式，可为left，right，center
+a = tk.Label(window, textvariable=var, bg='yellow', font=('Arial', 12, 'bold'), width=15, height=2, wraplength=150, justify='center')
+# 将标签显示上去
+a.pack()
+
+# 创建window对象的按钮,command为点击按钮时要用到的函数
+b = tk.Button(window, text='惦记我', width=15, height=1, command=hit_me)
+
+# 定义window窗口的输入框，show可为None，即不处理，如果为密码框可将show赋值*
+e = tk.Entry(window, show='*')
+
+# 定义window的文本框
+t = tk.Text(window, height=3)
+t.insert('insert', string) # 向文本框当前位置插入文本
+t.insert('end', string) # 向文本框末尾插入文本
+t.insert('1.1', string) # 向文本框第一行第一列插入文本
+t.config(wrap='word') # 以单词分隔换行
+t.config(state='disabled') # 禁用文本框
+t.get('1.0', 'end') # 从第一行第零列开始，到最后获取全部内容 
+t.get('1.0', '1.end') # 获取第一行全部内容
+t.delete('1.0') # 删除第一行第一列的字符
+t.delete('1.0', '1.end') # 删除第一行
+t.tag_add('my_tag', '1.0', '1.0 wordend') # 添加标签
+t.tag_configure('my_tag', background='yellow') # 为标签添加颜色
+t.tag_remove('my_tag', '1.1', '1.3') # 移除指定范围的tag渲染
+t.tag_ranges('my_tag') # 获取tag的渲染范围
+t.tag_names() # 不传参数返回所有tag名
+t.tag_delete('my_tag') # 删除tag
+# 还有图片什么的就不说了
+
+# 创建列表部件
+string = tk.StringVar()
+string.set((1, 2, 'hello', '你好'))
+lb = tk.Listbox(window, listvariable=string)
+lb.insert('end', 'haha')
+lb.pack()
+
+# 创建单选按钮，text为显示标签，variable为选中时绑定的变量，value为变量赋值，command为触发方法
+var = tk.StringVar()
+def print_selection():
+    print('你刚点击了{}选项'.format(var.get()))
+r1 = tk.Radiobutton(window, text='A选项',
+                    variable=var, value='A',
+                    command=print_selection)
+
+# 创建复选框，text为显示标签，variable为选中时绑定的变量，on/offvalue为变量赋值，command为触发方法
+var1 = tk.IntVar()
+var2 = tk.IntVar()
+def print_selection():
+    if var1.get() == 1 and var2.get() == 0:
+        print('you are right :), I only love python')
+c1 = tk.Checkbutton(window, text='Python', variable=var1,
+                    onvalue=1, offvalue=0,
+                    command=print_selection)
+c2 = tk.Checkbutton(window, text='Java', variable=var2,
+                    onvalue=1, offvalue=0,
+                    command=print_selection)
+
+
+					
+# 创建尺度
+def print_selection(v):
+    print(v)
+s = tk.Scale(window, label='拉我',  # 定义尺度名
+             from_=5, to=10,  # 定义尺度范围
+             orient=tk.HORIZONTAL,  # 定义尺度的摆放方式，水平或垂直
+             length=200,  # 定义尺度的长度，像素单位
+             showvalue=1,  # 是否显示值
+             tickinterval=1,  # 定义显示标签的间隔长度
+             resolution=0.01,  # 定义数字的精确范围
+             command=print_selection)
+
+# 创建数字范围
+year = tk.StringVar()
+tk.Spinbox(window, from_=1996, to=2017, textvariable=year).pack()
+			 
+# 创建画布，bg为背景颜色，width/height为像素宽高
+canvas = tk.Canvas(window, bg='#FFEFD5',
+                   height=500, width=500)
+# 创建包含图片位置的对象
+image_file = tk.PhotoImage(file='timg.gif')
+# 画布创建图片，图片放在10， 10位置，锚点在西北方向，image为指定的存放图片位置的对象
+image = canvas.create_image(10, 10, anchor='nw', image=image_file)
+x0, y0, x1, y1 = 50, 50, 150, 150
+# 画布上画线
+line = canvas.create_line(x0, y0, x1, y1)
+# 画布上画圆
+oval = canvas.create_oval(x0, y0, x1, y1, fill='red')
+# 画布上画扇形
+arc = canvas.create_arc(x0+30, y0+30, x1+30, y1+30, start=0, extent=180, fill='green')
+# 画布上画矩形
+rect = canvas.create_rectangle(x0, y0, x1, y1, fill='yellow')
+canvas.pack()
+def move_down():
+    canvas.move(rect, 0, 2)
+b = tk.Button(window, text='move down', command=move_down).pack()
+# 获取画布上的线坐标
+canvas.coords(line)
+canvas.coords(line, 0, 0, 132, 156, 12, 3) # 修改画布上的线坐标
+canvas.itemconfigure(line, smooth=True) # 修改属性
+canvas.itemconfigure(line, splinesteps=5) # 修改属性
+canvas.delete(line) # 删除线
+# 画布上创建窗口部件
+canvas.create_window(320, 60, window=button)
+
+def canvas_click(event):
+	x = canvas.canvasx(event.x) # 获取canvas画布当前的长下鼠标的位置
+	y = canvas.canvasy(event.y) # 获取canvas画布当前的宽下鼠标的位置
+canvas.bind('<l>', canvas_click) # 绑定点击事件
+
+
+
+# 创建栏目条
+def do_job():
+    global count
+    count += 1
+    print(count)
+menubar = tk.Menu(window)
+# 创建栏目项，定义所属栏目条，是否显示分离线
+filemenu = tk.Menu(menubar, tearoff=0)
+# 栏目条级联栏目项，为该项取名并显示
+menubar.add_cascade(label='file', menu=filemenu)
+# 栏目项添加功能项
+filemenu.add_command(label='New', command=do_job)
+filemenu.add_command(label='Open', command=do_job)
+filemenu.add_command(label='Save', command=do_job)
+# 添加分隔线
+filemenu.add_separator()
+filemenu.add_command(label='Exit', command=window.quit)
+# 在后面添加快捷键标识
+filemenu.entryconfig('New', accelerator='Ctrl + N')
+filemenu.entryconfig('New', image=logo, compound='left') # 添加图片标识
+filemenu.entryconfig('New', state='disabled') # 禁用选项
+filemenu.delete('New') # 删除选项
+
+# 创建栏目项，定义所属栏目条，是否显示分离线
+editmenu = tk.Menu(menubar, tearoff=0)
+# 栏目条级联栏目项，为该项取名并显示
+menubar.add_cascade(label='edit', menu=editmenu)
+# 栏目项添加功能项
+editmenu.add_command(label='Cut', command=do_job)
+editmenu.add_command(label='Copy', command=do_job)
+editmenu.add_command(label='Paste', command=do_job)
+# 创建下级栏目项
+submenu = tk.Menu(editmenu, tearoff=0)
+editmenu.add_cascade(label='import', menu=submenu, underline=0)
+submenu.add_command(label='python file', command=do_job)
+# 给窗口装上栏目条
+window.config(menu=menubar)
+
+
+# 定义框
+frm = tk.Frame(window)
+frm.pack()
+# 定义框中的左框
+frm_left = tk.Frame(frm)
+# 定义框中的右框
+frm_right = tk.Frame(frm)
+frm_left.pack(side='left')
+frm_right.pack(side='right')
+
+tk.Label(window, text='我在窗口上').pack()
+tk.Label(frm_left, text='我在左框上').pack()
+tk.Label(frm_right, text='我在右框上').pack()
+
+
+# 弹出信息
+from tkinter import messagebox
+def on_hit():
+    # 弹出信息提示框
+    messagebox.showinfo(title='Hi', message='哈哈哈')
+    # 弹出警告
+    messagebox.showwarning(title='Warning', message='got some warning')
+    # 错误提醒
+    messagebox.showerror(title='Error', message='got some error')
+    # return True/False/None
+    messagebox.askyesnocancel(title='check', message='你确定？')
+    # return yes/no
+    messagebox.askquestion(title='ask', message='我问一下')
+    # return True/False
+    messagebox.askyesno(title='ask', message='我问一下')
+    messagebox.askokcancel(title='ask', message='我问一下')
+    messagebox.askretrycancel(title='ask', message='是否重试一下')
+tk.Button(window, text='点我', command=on_hit).pack()
+
+
+# 部件放置方法
+pack(side='top', fill=X, expand=True) # side可设置为top, bottom, left, right, fill可设置为X,Y,BOTH, expand是否拓展全局
+for widget in root.pack_slaves():  # 设置所有pack的属性
+	widget.pack_configure(fill=BOTH, expand=True)
+grid(row=5, column=3, padx=10, pady=10) # row/column为第几行/列，padx/pady或ipadx/ipady为x/y轴方向的外部/内部间距
+place(x=200, y=100, anchor='nw') # 放置在具体像素点的位置，anchor可定义可不定义
+place(relx=0.5, rely=0.5, anchor='center') # 拉升时相对x/y轴放置
+place(relwidth=0.5, relheight=0.3)  # 相对于当前窗口大小所设置的大小
+place(relx=0.5, x=200, rely=0.5, y=100, anchor='center')  # 绝对和相对相结合
+
+
+# 修改部件的所有参数
+部件名.config()
+
+
+# 创建基于另一个窗口的窗口
+window = tk.Toplevel(root)
+window.title('window')
+window.lift(root)  # 窗口显示在root窗口上面
+window.lower(root)  # 窗口显示在root窗口下面
+window.state('zoomed')  # 窗口最大化
+window.state('withdrawn')  # 关闭窗口
+window.state('iconic')  # 最小化窗口
+window.state('normal')  # 将窗口恢复正常（有时需要运行两次才能恢复）
+window.iconify()  # 最小化窗口
+window.deiconify()  # 取消最小化窗口
+window.geometry('640x480+50+100')  # 前面乘法为窗口的长和宽，后面加法为屏幕的左边距和上边距
+window.maxsize(640, 480)  # 限制窗口的最大长宽
+window.minsize(200, 200)  # 限制窗口的最小长宽
+window.resizable(True, True)  # 窗口是否可自由拉升，第一个x限制左右拉升，第二个y限制上下拉升
+window.destroy()  # 彻底关闭窗口
+root.mainloop()
+
+
+# 创建基于root窗口的水平方向面板框
+panedwindow = ttk.Panedwindow(root, orient='horizontal')
+# fill='both'让这个面板框填满窗口,expand=True表示当窗口拉升时也一样填满窗口
+panedwindow.pack(fill='both', expand=True)
+frame1 = ttk.Frame(panedwindow, width=100, height=300, relief='sunken')
+frame2 = ttk.Frame(panedwindow, width=400, height=300, relief='sunken')
+panedwindow.add(frame1, weight=1)  # 当窗口拉升时，宽也随着拉升1单位
+panedwindow.add(frame2, weight=4)  # 当窗口拉升时，宽也随着拉升4单位
+frame3 = ttk.Frame(panedwindow, width=50, height=300, relief='sunken')
+panedwindow.insert(1, frame3)  # 可调节大小，但窗口拉升时大小不变
+panedwindow.forget(1)  # 删除掉索引1的面板框
+
+
+# 创建样式
+style = ttk.Style()
+print(style.theme_names())  # 获取主题列表
+print(style.theme_use())  # 获取当前使用的主题
+button = ttk.Button(root, text='button')
+button2 = ttk.Button(root, text='button2')
+button.pack()
+button2.pack()
+style.theme_use('xpnative')  # 更换主题
+print(button.winfo_class())  # 获取配置样式时该部件的别名
+style.configure(button.winfo_class(), foreground='blue', background='yellow')  # 配置全局样式
+style.configure('Alarm.TButton', foreground='orange', font=('Arial', 24, 'bold'))  # 配置局部样式
+style.map('Alarm.TButton', foreground=[('pressed', 'pink'), ('disabled', 'grey')])  # 配合map进行更多的配置
+button2.config(style='Alarm.TButton')  # 使用局部样式
+print(style.layout(button.winfo_class()))  # 获取该部件的布局
+print(style.element_options('Button.padding'))  # 获取元素选项
+print(style.lookup('TButton', 'foreground'))  # 获取该属性当前值
+
+
+# 设置窗口行列随着拉升
+root.rowconfigure(0, weight=1) # 1单位拉升
+root.rowconfigure(1, weight=3)  # 3单位拉升
+
+# 打开文件
+from tkinter import filedialog
+filename = filedialog.askopenfile()  # 请求弹出文件选择框,还有保存啥的就不举例了
+print(filename.name)  # 打印文件位置
+
+
+# 颜色选择器
+from tkinter import colorchooser
+color = colorchooser.askcolor(initialcolor='#FFFFFF')
+
+
+# 键盘按键绑定监听
+def key_press(event):
+    print('type: {}'.format(event.type))
+    print('widget: {}'.format(event.widget))
+    print('char: {}'.format(event.char))  # 获取所按字符
+    print('keysym: {}'.format(event.keysym))
+    print('keycode: {}'.format(event.keycode))
+root.bind('<KeyPress>', key_press)  # 监听键盘按键
+def shortcut(action):
+    print(action)
+root.bind('<Control-c>', lambda e: shortcut('Copy'))  # 监听复制按键
+root.bind('<Control-v>', lambda e: shortcut('Paste'))  # 监听粘贴按键
+
+# 鼠标按键绑定监听
+canvas = tk.Canvas(root, width=640, height=480, background='white')
+canvas.pack()
+def mouse_press(event):
+    print('type: {}'.format(event.type))
+    print('widget: {}'.format(event.type))
+    print('num: {}'.format(event.type))
+    print('x: {}'.format(event.x))  # 获取鼠标的x位置
+    print('y: {}'.format(event.y))  # 获取鼠标的y位置
+canvas.bind('<ButtonPress>', mouse_press)  # 鼠标单击事件
+bind('<l>', lambda e: print('<l>'))  # 绑定鼠标左键
+unbind('<l>')  # 取消绑定鼠标左键
+def mouse_press(event):
+    global prev
+    prev = event
+canvas.bind('<ButtonPress>', mouse_press)
+def draw(event):
+    global prev
+    canvas.create_line(prev.x, prev.y, event.x, event.y, fill='orange')
+    prev = event
+canvas.bind('<B1-Motion>', draw)  # 监听鼠标长按事件
+
+
+# 显示窗口
+window.mainloop()
+
+---------------------------------------------------  ttk  --------------------------------------------------------------------
+# ttk里设置前景颜色和背景颜色
+foreground='blue', background='yellow'
+
+# 设置图片（包含label，button等等部件都可以，这里用label举例）
+logo = tk.PhotoImage(file='timg.gif')
+small_logo = logo.subsample(10, 10) # 按倍数缩小图片
+label.config(image=self.logo)
+-----------------------------
+self.label.img = self.logo
+self.label.config(image=self.label.img)
+
+
+# 将标签的背景图片和文字结合
+label.config(compound='center')
+label.config(compound='left')
+label.config(compound='right')
+
+# 获取部件的信息
+button = ttk.Button(window, text='click me')
+print(button['text'])
+
+# 修改部件信息
+button['text'] = 'you click me'
+button.config(text='push me')
+
+# 获取部件可用配置
+print(button.config())
+
+# 获取tkinter内部的身份认证识别代号
+print(str(button))
+
+# 按钮/文本的各种内置方法
+button.invoke() # 调用按钮的方法，如果该按钮绑定的方法没有返回值，会返回None
+button.state(['disabled']) # 禁用该按钮
+button.instate([disabled]) # 获取按钮的状态，返回True，False
+button.state(['!disabled']) # 解除按钮禁用
+entry.state(['readonly']) # readonly只能用于文本
+
+# 创建下拉列表
+month = tk.StringVar() # 该变量可用于获取/修改当前选中的值
+combobox = ttk.Combobox(window, textvariable=month,
+                        values=([x for x in range(1996, 2017)]))
+combobox.pack()
+print(month.get())
+
+# 创建进度条
+progressbar = ttk.Progressbar(window, orient='horizontal', length=200)
+progressbar.pack()
+progressbar.config(mode='indeterminate')# 进度条不定时（来回滚动）
+progressbar.start() # 进度条开始
+progressbar.stop() # 进度条结束
+progressbar.step(5) # 进度条跳到这里
+progressbar.config(mode='determinate', maximum=11.0, value=4.2) # 进度条向最大值100%前进
+
+# 定义框
+frame = ttk.Frame(window)
+frame.pack()
+frame.config(height=100, width=200) # 定义frame宽高
+# 共有六种frame显示浮雕
+# flat,raised,sunken,solid,ridge,groove
+frame.config(relief='raised')
+ttk.Button(frame, text='click me').grid() # 在frame里添加部件
+frame.config(padding=(40, 15)) # 定义frame内边距
+
+ttk.LabelFrame(window, height=100, width=200, text='label frame').pack() # 创建带有标签的frame
+
+
+# 创建树图
+treeview = ttk.Treeview(root)
+treeview.pack()
+# 向树图插入节点，参数1为父母节点，参数2为索引，参数3为节点id，参数4为节点名
+treeview.insert('', '0', 'item1', text='First Item')
+treeview.insert('', '1', 'item2', text='Second Item')
+treeview.insert('', 'end', 'item3', text='Third Item')
+logo = tk.PhotoImage(file='timg.gif').subsample(10, 15)
+treeview.insert('item3', '0', 'subitem', text='OMG', image=logo)
+treeview.config(height=5)  # 设置树图的属性值
+treeview.move('item3', 'item1', '0')  # 移动节点，参数1为移动的节点，参数2为移动到哪个父母节点下，参数3为新的索引值
+treeview.item('item1', open=True)  # 设置该节点自动打开
+print(treeview.item('item1', 'open'))  # 获取该节点是否打开,打开返回1，闭合返回0
+treeview.detach('item2')  # 分离隐藏该节点，但没有删除，可以移动到别的节点下
+treeview.delete('item2')  # 完全删除节点
+treeview.config(columns=('duck', 'bird'))  # 定义列
+treeview.column('duck', width=50, anchor='center')  # 按名称设置列的属性值
+treeview.column('#0', width=300)  # 按索引设置列的属性值
+treeview.heading('duck', text='duck')  # 设置列名
+treeview.set('subitem', 'duck', 'gagaga')  # 在该列下填内容，参数1指定节点，参数2指定列，参数3内容
+treeview.item('subitem', tags=('bg', 'bg2'))  # 为节点添加标签
+treeview.tag_configure('bg', background='yellow')  # 设置标签属性
+def callback(event):
+    print(treeview.selection())
+treeview.bind('<<TreeviewSelect>>', callback)  # 绑定事件，当树图被点击，运行函数
+treeview.config(selectmode='browse')  # 限制每次最多可选一个节点
+treeview.config(selectmode='none')  # 限制节点不可选
+treeview.selection_add('item1', 'subitem')  # 自动选择节点
+treeview.selection_remove('item1')  # 取消选择的节点
+treeview.selection_toggle('item3', 'subitem')  # 相反方向选择或取消节点
+
+
+# 创建滚动条
+text = tk.Text(root, width=40, height=10, wrap='word')
+text.grid(row=0, column=0)
+scrollbar = ttk.Scrollbar(root, orient='vertical', command=text.yview)  # 垂直方向创建滚动条
+scrollbar.grid(row=0, column=1, sticky='ns')  # 安置滚动条的位置
+text.config(yscrollcommand=scrollbar.set)  # 设置滚动条随长度进行处理
+
+
+------------------------------------------------简单的类实现------------------------------------------------------------------
+import tkinter as tk
+from tkinter import ttk
+
+
+class HelloApp:
+    def __init__(self, master):
+        self.label = ttk.Label(master, text='hello, tkinter')
+        self.label.grid(row=0, column=0, columnspan=2)
+
+        ttk.Button(master, text='Texas',
+                   command=self.texas_hello).grid(row=1, column=0)
+
+        ttk.Button(master, text='Hawaii',
+                   command=self.hawaii_hello).grid(row=1, column=1)
+
+    def texas_hello(self):
+        self.label.config(text='howdy,tkinter')
+
+    def hawaii_hello(self):
+        self.label.config(text='aloha,tkinter')
+
+
+if __name__ == '__main__':
+    window = tk.Tk()
+    app = HelloApp(window)
+    window.mainloop()

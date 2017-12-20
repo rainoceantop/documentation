@@ -1,0 +1,208 @@
+matplotlib 
+安装：C:\Users\jesse\AppData\Local\Programs\Python\Python36-32\Scripts\pip install matplotlib
+
+导入 import matplotlib.pyplot as plt
+
+画线 plt.plot(x, y) plt.plot([1, 2, 3], [5, 7, 4], label='first graph')
+
+画日期线 plt.plot(x, y)
+
+画柱状图 plt.bar(x, y, label='first bar', color='#FFE4C4')
+
+画直方图(统计范围内符合的数量) plt.hist(x, y, histtype='bar', label='first histogram', rwidth=0.8)
+
+画分散图 plt.scatter(x, y, label='first scatter', marker='*', s=100)
+
+画堆栈图
+days = [1, 2, 3, 4, 5, 6, 7]
+
+sleeping = [8, 8, 8, 8, 8, 10, 10]
+eating = [2, 2, 2, 2, 2, 2, 2]
+working = [8, 8, 8, 8, 8, 2, 2]
+playing = [6, 6, 6, 6, 6, 10, 10]
+#python这个库不带堆栈图标记，自己创建唯标记
+plt.plot([], [], color='#7AC5CD', label='Sleeping', linewidth=5)
+plt.plot([], [], color='#FAEBD7', label='Eating', linewidth=5)
+plt.plot([], [], color='#9AFF9A', label='Working', linewidth=5)
+plt.plot([], [], color='#FFF68F', label='Playing', linewidth=5)
+plt.stackplot(days, sleeping, eating, working, playing, colors=['#7AC5CD', '#FAEBD7', '#9AFF9A', '#FFF68F'])
+
+画扇形图
+slices = [8, 2, 8, 6]
+activities = ['sleeping', 'eating', 'working', 'playing']
+colors = ['#7AC5CD', '#FAEBD7', '#9AFF9A', '#FFF68F']
+plt.pie(slices, labels=activities, colors=colors, startangle=90, shadow=True, explode=[0, 0.1, 0, 0], autopct='%1.1f%%')
+
+颜色作为参数color传进画图函数里
+
+x-轴命名 plt.xlabel('quality')
+
+y-轴命名 plt.ylabel('amount')
+
+图表名称 plt.title('quality-amount statistics\ncheck it out')
+
+显示标记 plt.legend()
+
+显示 plt.show()
+
+读取csv文件 
+import csv
+
+x = []
+y = []
+with open('example.txt', 'r') as csvfile:
+    plots = csv.reader(csvfile, delimiter=',')
+    for row in plots:
+        x.append(int(row[0]))
+        y.append(int(row[1]))
+
+plt.plot(x, y, label='loaded from file!')
+
+使用numpy读取txt文件
+# 正常情况下将返回一个二维矩阵，设置unpack=True后返回各列
+x, y = np.loadtxt('example.txt', delimiter=',', unpack=True)
+plt.plot(x, y, label='loaded from file!')
+
+保存图片：fig.savefig('test.png', facecolor=fig.get_facecolor())
+
+自定义
+ax1.legend()
+leg = legend(loc=9, ncol=2, prop={'size':11}) # loc定义位置参数，ncol表示显示列数，prop传递各种参数
+leg.get_frame().set_alpha(0.4) # 设置透明度
+
+#需要将图形变成网格并赋予一个变量的时候才能使用
+标签旋转：
+ax1 = plt.subplot2grid((3, 2), (2, 0), colspan=2)
+for label in ax1.xaxis.get_ticklabels():
+    label.set_rotation(90)
+显示网格： ax1.grid(True, color='green', linestyle='-', linewidth='2')
+
+调整图形位置：plt.subplots_adjust(bottom=0.45)
+
+改变x/y轴标签颜色：ax1.xaxis.label.set_color('c')  ax1.yaxis.label.set_color('r')
+
+设置x/y轴坐标间隔：ax1.set_xticks([]) ax1.xaxis.set_ticks([]) ax1.set_yticks([]) ax1.yaxis.set_ticks([])
+
+填充颜色：ax1.fill_between(thetime, price, price[0], facecolor="g", alpha=0.3)
+
+操作坐标轴：ax1.spines['left'].set_color('g') ax1.spines['right'].set_visible(False) ax1.spines['left'].set_linewidth(5)
+
+修改坐标轴时间格式：ax1.xaxis.set_major_formatter(mdates.DateFormatter("%Y-%m-%d"))
+
+修改坐标轴间隔：ax1.xaxis.set_major_locator(mticker.MaxNLocator(5))
+
+参数操作x/y轴：ax1.tick_params(axis='x', colors='g')
+
+操作水平/垂直线：ax1.axhline(price[0], color='k', linewidth=5) ax1.axvline(thetime[0], color='k', linewidth=5)
+
+限制坐标轴：ax2v.set_ylim(0, 5*max(y)) # 按原来的y轴的1/5缩放
+
+
+共享坐标轴：
+
+金融图（略）：from matplotlib.finance import candlestick_ohlc
+candlestick_ohlc(ax1, ohlc)
+
+使用样式：from matplotlib import style
+style.use('ggplot')
+style.use('fivethirtyeight')
+print(plt.style.available)
+
+嵌入文字： 
+font_dict = {'family': 'serif',
+             'color': 'darkred',
+             'size': 20}
+ax1.text(float(xs[5]), float(ys[5]), '555', fontdict=font_dict) (标签的类型一定要相同)
+
+获取文件位置：print(plt.__file__)
+
+同步更新数据：
+from matplotlib import animation
+
+fig = plt.figure()
+ax1 = fig.add_subplot(1, 1, 1)
+
+# 写一个获取数据的函数
+def animate(i):
+    graph_data = open('example.txt', 'r').read()
+    lines = graph_data.split('\n')
+    xs = []
+    ys = []
+    for line in lines:
+        if len(line) > 1:
+            x, y = line.split(',')
+            xs.append(x)
+            ys.append(y)
+    ax1.clear()
+    ax1.plot([float(a) for a in xs], [float(b) for b in ys])
+
+
+# 每过一秒更新一次
+ani = animation.FuncAnimation(fig, animate, interval=1000)
+plt.show()
+
+箭头指向(x，y轴的标签类型要一致)：
+ax1.annotate('bad news', (float(xs[6]), float(ys[6])),
+                 xytext=(0.8, 0.9), textcoords='axes fraction',
+                 arrowprops=dict(facecolor='grey', color='grey'))
+				 
+显示最后一个值：
+bbox_props = dict(boxstyle='round', fc='w', ec='k', lw=1)
+ax1.annotate(ys[-1], (float(xs[-1]), float(ys[-1])),
+			 xytext=(float(xs[-1]), float(ys[-1])),
+			 bbox=bbox_props)
+			 
+
+分布式格局(使用时添加的标签，标题等要对应在每个图形的上/下面)：
+# 第一个数字（参数）为分割行数，第二个为分割列数，第三个为第几个网格作为图形展示
+ax1 = fig.add_subplot(221) # 两行两列选第一个
+ax2 = fig.add_subplot(222, sharex=ax1) # 两行两列选第二个，共享ax1的x坐标轴
+ax2v = ax2.twinx() # 共用x坐标轴
+ax3 = fig.add_subplot(212) # 两行一列选第二个
+
+# 图形被分割成3行，2列的网格，后面的plot的位置在第三行第一列（默认第一行/列为0，左上角向下延伸）
+plt.subplot2grid((3, 2), (2, 0), colspan=2).plot([0, 1, 2, 3], [10, 20, 30, 15])
+
+地图 Basemap
+
+3D 
+import matplotlib.pyplot as plt
+from mpl_toolkits.mplot3d import Axes3D
+import numpy as np
+
+# 设置三维坐标
+fig = plt.figure()
+ax = Axes3D(fig)
+
+# 生成数据
+x = np.linspace(-5, 5, 200)
+y = np.linspace(-5, 5, 200)
+X, Y = np.meshgrid(x, y)  # XY平面的网格数据
+Z = (1 - X / 2 + X ** 7 + Y ** 5) * np.exp(-X ** 2 - Y ** 2)
+
+# 画3d图
+ax.plot_surface(X, Y, Z, rstride=1, cstride=1, cmap=plt.cm.jet)
+# ax.plot_surface(X,Y,z,rstride=1,cstride=1,cmap=plt.get_cmap('rainbow'))
+# 等高线图
+ax.contourf(X, Y, Z, zdir='z', offset=-2, cmap='rainbow')  # zdir= x/y/x 轴的等高线 offset=等高线的位置
+
+plt.show()  
+
+
+
+
+
+
+
+
+
+
+
+正确的matplotlib时间格式：
+① 数字类型：20171218
+	 1.用strpdate2num创建转换器：converter = mdates.strpdate2num("%Y%m%d")
+	 2.将数组里面的所有值用该转换器转换重新赋值：x = [converter(i) for i in x]
+	 3.用plot_date显示
+② 时间戳类型：
+	 1.用np创建转换器：converter = np.vectorize(datetime.datetime.fromtimestamp)
+     2.转换x：x = converter(x)

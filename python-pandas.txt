@@ -1,0 +1,86 @@
+
+创建序列：s = pd.Series([1, 3, 6, np.nan, 44, 1]) # 打印的时候会显示下标索引，默认类型float64或float32
+
+创建日期范围数组：dates = pd.date_range('20171106', periods=7) # 7天的日期数组
+
+# index为行的索引，column为列的索引，如不指定，行和列默认0开始索引
+创建数据表格：df = pd.DataFrame(np.random.randn(7, 4), index=dates, columns=['r1', 'r2', 'r3', 'r4']) 
+              df2 = pd.DataFrame({
+					'A': 1.,
+                    'B': pd.Timestamp('20171106'),
+                    'C': 3,
+                    'D': pd.Categorical(['a', 'b', 'c', 'd']),
+                    'E': 'food'})
+		获取表格每一列的类型：print(df2.dtypes)
+		获取每一行的索引：print(df.index)
+		获取每一列的索引：print(df.columns)
+		获取表格数据：print(df.values)
+		将表格行列倒置：print(df.T)
+		计算表格中的数据：df.describe()
+		对行的索引排序：df.sort_index(axis=1, ascending=False) # ascending=False时表示倒序
+		对列的索引排序：df.sort_index(axis=0, ascending=False) # ascending=False时表示倒序
+		对列的值排序：df.sort_values(by='r4')
+		获取列：df['r3'] 或者 df.r3
+		切片获取行：df[0:1] 或者 df[dates[0]:dates[1]]
+		
+		# 根据标签索引 select by label
+		具体索引获取行：df.loc[dates[0]]
+		具体索引筛选行和列：df.loc[:, ['r3', 'r4']]
+		
+		# 根据index索引 select by index
+		根据索引下标获取数据：df.iloc[1:3, 1:3]
+							  df.iloc[[1, 3, 5], 1:3]
+							  
+		# 混合索引 select by ix
+		用标签和index混合筛选数据：df.ix[1:3, ['r3', 'r4']]
+		
+		# 根据boolean索引 boolean indexing
+		用判断的方式进行筛选：df[df.r3 > 1]
+		
+修改表格数据：
+		df.iloc[2, 2] = 11
+		df.loc[dates[0], 'r3'] = 11
+		df.r1[df.r1 > 1] = 0
+		添加列：df['r5'] = np.nan
+
+处理表格数据：
+		# 当how等于any的时候，只要包含一个nan的，就删除，如果改为all，则需要行内所有值都为nan的时候才删除
+		删除包含nan的表格的行：df.dropna(axis=0, how='any') # how={'all', 'any'}
+		删除包含nan的表格的列：df.dropna(axis=1, how='any')
+		
+		填充包含nan的表格的数据：df.fillna(value=0)
+		
+		判断表格的数据是否为nan：df.isnull()
+		判断表格至少存在一个nan丢失数据：np.any(df.isnull())
+
+合并表格：
+	df1 = pd.DataFrame(np.ones((3, 4)) * 0, columns=['a', 'b', 'c', 'd'])
+	df2 = pd.DataFrame(np.ones((3, 4)) * 1, columns=['a', 'b', 'c', 'd'])
+	df3 = pd.DataFrame(np.ones((3, 4)) * 2, columns=['a', 'b', 'c', 'd
+	# ingnore_index=True表示忽略原来的索引，用数字有序的索引替代
+	同列栏目向下合并：pd.concat([df1, df2, df3], axis=0, ignore_index=True)
+					  df1.append([df2, df3], ignore_index=True)
+	同行栏目向右合并：pd.concat([df1, df2, df3], axis=1, ignore_index=True)
+	# join,['inner','outer']
+	裁剪掉不同行/列后合并：pd.concat([df1, df2, df3], join='inner', ignore_index=True)
+	# join_axes
+	根据某个表的行索引进行合并（没有该索引下表的其他表合并后用NaN表示）：
+	pd.concat([df1, df2, df3], join_axes=[df1.index], axis=1, ignore_index=True)
+	# merge高级合并
+	根据column进行合并：pd.merge(df1, df2, on='key', suffixes=['_left', '_right'], indicator=True) # 显示合并方式，将true换为一个字符串，可为该列命名，suffixes可为相同名称的列加后缀名
+	多个column进行合并：pd.merge(df1, df2, on=['key', 'key1'], how='inner') # how默认为inner，共有四种选择【'inner','outer','left','right'】
+	# left_index 和 right_index默认为none，设置为true之后将改变合并方式，从根据column合并换为行标签合并
+	根据行标签进行合并：pd.merge(df1, df2, left_index=True, right_index=True, indicator=True)
+	
+生成图表：
+	import matplotlib.pyplot as plt
+	data = pd.DataFrame(np.random.randn(1000, 4), columns=['A', 'B', 'C', 'D'])
+	data = data.cumsum()
+	data.plot()
+	data.plot.scatter(x='A', y='B')
+		
+读取csv文件：data = pd.read_csv('test.csv')
+存储文件：data.to_pickle('test.pkl')
+	
+					
+pd.Timestamp('20171106') # 创建单个时间

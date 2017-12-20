@@ -1,0 +1,72 @@
+linux基本指令
+
+清空命令行：clear
+命令行的~代表home位置
+
+下载软件：sudo apt-get install xxxxx
+进入目录：cd mulu/mulu2
+返回目录：cd ../..
+返回最上层目录：cd -
+返回home:cd ~
+绝对路径进入目录：cd /home/jesse/Documents/folder
+创建文件：touch file1.txt file2 file3
+创建文件夹：mkdir folder3
+删除文件夹：rmdir folder3(删除空文件夹)
+删除文件/文件夹：rm file1
+				 rm -r folder1/(递归逐个删除)
+				 rm -i file1 file2 file3 file4(逐个提示是否删除)
+				 rm -I file1 file2 file3 file4(大于三个文件时提示是否删除)
+				 rm *(清空该目录下所有文件)
+				 rm /(清空系统所有文件)
+复制文件：cp file1 filecopy(如果存在会覆盖)
+          cp -i file1 filecopy(如果存在会提示)
+		  cp file1 folder/(复制到文件夹folder中，/识别文件夹)
+		  cp -R folder/ folder2/(-R代表递归，逐个将folder的文件复制到folder2中)
+		  cp file* folder2/(将所有file开头的文件复制到folder2目录下)
+		  cp *file folder2/(将所有file结尾的文件复制到folder2目录下)
+		  cp file1 file2 file3 folder2/(将前面所有的东西复制到最后所指的目录)
+剪切：mv file1 folder/
+查看当前目录下的文件列表：ls
+查看当前目录下的文件列表的详细信息：ls -l 或者 ls -lh(适合人类看的)
+查看当前目录下的所有文件列表：ls -a
+查看ls的所有功能：ls --help
+
+nano编辑文件(功能命令^代表ctrl键)：nano t.py(不存在文件的话会自动创建文件)
+cat编辑文件：cat t.py(显示文件内容)
+			 cat t.py > t1.py(将t.py的内容复制到t1.py中)
+			 cat t.py t1.py > t2.py(将t.py t1.py的内容复制到t2.py中)
+			 cat t3.py >> t2.py(将t3.py的内容加到t2.ty的后面)
+运行python3文件：python3 t.py
+
+
+
+权限：第一个代表类型，第2-4代表user，第5-7代表group，第8-10代表其他的权限
+drwxr-xr-x：d代表文件夹，r代表可读，w代表可写，x代表可执行(执行命令：./t1.py)
+-rw-r--r--：-代表文件
+修改权限：chmod u+r t1.py(为user用户t1.py增加可读权限)
+		  chmod u+rwx t1.py(为user用户t1.py增加可读可写可执行权限)
+		  chmod u-r t1.py(为user用户t1.py减去可读权限)
+		  chmod g+r t1.py(为group用户t1.py增加可读权限)
+		  chmod o+r t1.py(为others用户t1.py增加可读权限)
+		  chmod a+r t1.py(为全部用户t1.py增加可读权限)
+		  chmod ug+r t1.py(为user,group用户t1.py增加可读权限)
+
+通过权限运行的文件要在文件最开头一行添加解释器：#!/usr/bin/python3
+
+下载linux SSH终端：sudo apt-get install openssh-server
+获取ip地址：ifconfig(如果提示没安装一些东西：sudo apt install net-tools)
+用mac控制linux：ssh jesse@192.168.0.108
+用windows控制：下载PuTTY先
+手机控制：下载ssh应用
+控制后图形界面显示：使用外网 Teamviewer
+				    使用局域网 VNC(sudo apt-get install x11vnc)
+					
+					
+mac将文件推送到linux运行：ssh jesse@192.168.0.108 python3 < t1.py(将t1.py推送到linux上运行)
+将文件复制到linux上：scp {a,b}.py jesse@192.168.0.108:~/Desktop/
+从linux云端保存到本地：scp jesse@192.168.0.108:~/Desktop/b.py c.py
+控制云端弹出窗口：ssh jesse@192.168.0.108 "export DISPLAY:0; firefox"
+linux创建共享文件夹：右键文件夹点击share。。。啥的
+                     设置远程共享的密码：sudo smbpasswd -a jesse
+
+

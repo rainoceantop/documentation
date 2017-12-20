@@ -1,0 +1,14 @@
+socket python实现
+
+host = '' # 如果写0.0.0.0或'',则表示所有机器都可访问，如果写localhost则只有此机器能访问
+PORT = 50007 # 连接端口
+s = socket.socket(socket.AF_INET, socket.SOCK_STREAM) # IPv4的TCP连接
+s.bind((HOST, PORT)) # 绑定服务器
+s.listen(1) # 同时只能监听一个链接
+conn, addr = s.accept() # 接收连接信息，返回与客户端新的socket和地址
+print ('Connected by', addr)
+while 1: # 持续接收数据
+    data = conn.recv(1024)
+    if not data: break # 如果没收到数据，跳出循环
+    conn.sendall(data) # 将数据发送出去
+conn.close() # 关闭连接

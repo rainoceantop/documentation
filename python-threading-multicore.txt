@@ -1,0 +1,51 @@
+python多线程
+导入：import threading as th
+
+当前激活数：threading.active_count()
+枚举当前激活线程：threading.enumerate()
+当前主运行线程：threading.current_thread()
+
+
+创建队列：q = queue.Queue
+# 创建线程 指定工作函数,并命名
+thread1 = threading.Thread(target=thread_job, name="T1")
+# 传参
+t = threading.Thread(target=job, args=(data[i], q))
+thread1.start()
+# join:主线程调用该线程，并且等到其完成以后才能接着实行
+# 此处join的原理就是依次检验线程池中的线程是否结束，没有结束就阻塞直到线程结束，如果结束则跳转执行下一个线程的join函数
+thread1.join()
+
+
+Lock锁
+在方法开始前，使用lock.acquire取得锁，结束后使用lock.release解除锁，放入同一线程的锁必须是同一把锁才能锁住，否则还是会交替运行
+def job1():
+    global lock
+    lock.acquire()
+    for i in range(10):
+        print("T1 is running")
+        time.sleep(.5)
+    lock.release()
+
+	
+GIL:全局解释器锁
+协同式多任务处理
+当一项任务比如网络 I/O启动，而在长的或不确定的时间，没有运行任何 Python 代码的需要，一个线程便会让出GIL，从而其他线程可以获取 GIL 而运行 Python。
+这种礼貌行为称为协同式多任务处理，它允许并发；多个线程同时等待不同事件。
+两个线程在同一时刻只能有一个执行 Python ，但一旦线程开始连接，它就会放弃 GIL ，这样其他线程就可以运行。这意味着两个线程可以并发等待套接字连接，这是一件好事。
+在同样的时间内它们可以做更多的工作。
+
+
+
+
+
+python多进程
+导入：import multiprocessing as mp
+创建跟线程一样
+创建进程锁和线程一样
+创建队列：q = mp.Queue()
+创建进程池：pool = mp.Pool() # 默认火力全开，指定核数mp.Pool(processes=3)
+指定工作：res = pool.map(job, range(100)) # 一次性分配给多个线程工作，第二个参数作为参数传进第一个参数所代表的函数内
+          res = p1.apply_async(job, (2,)) # 一次只能分配给一个线程
+创建共享内存：v = mp.Value("i", 0)
+			  a = mp.Array("i", [0, 1, 2, 3])
