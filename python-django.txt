@@ -1,0 +1,13 @@
+运行服务器：python manage.py runserver
+导入path和include：from django.urls import path, include
+导入重定型：from django.http import HttpResponseRedirect, HttpResponse
+导入models：from django.db import models
+导入timezone：from django.utils import timezone
+导入admin：from django.contrib import admin
+导入render：from django.shortcuts import get_object_or_404, render
+url指定类型：<int:id>
+admin注册应用：admin.site.register(Posts)
+前端{%%}使用if,for等等功能
+前端{{}}使用获取参数的值
+前端获取循环索引：{{ forloop.counter }}
+后台指定url：reverse('polls:results', args=(question.id,))
